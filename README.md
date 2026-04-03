@@ -65,7 +65,7 @@ llm-lora-finetuning/
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/<your-username>/Production-Grade-LLM-LoRA-Finetuning.git
+git clone https://github.com/narendranadh6/LLM-Fine-Tuning-Pipeline.git
 cd Production-Grade-LLM-LoRA-Finetuning
 
 python -m venv .venv && source .venv/bin/activate
