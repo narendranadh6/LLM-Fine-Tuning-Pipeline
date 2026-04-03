@@ -1,0 +1,34 @@
+# ============================================================
+# LoRA (Low-Rank Adaptation) Configuration
+# ============================================================
+
+lora:
+  # Rank of the LoRA update matrices. Lower = fewer params, higher = more capacity.
+  r: 16
+
+  # LoRA scaling factor. alpha / r governs the magnitude of the updates.
+  lora_alpha: 32
+
+  # Dropout applied to LoRA layers for regularisation.
+  lora_dropout: 0.05
+
+  # Target modules to apply LoRA to.
+  # GPT-2:   c_attn, c_proj
+  # LLaMA:   q_proj, v_proj, k_proj, o_proj
+  # Mistral: q_proj, v_proj, k_proj, o_proj
+  target_modules:
+    - "c_attn"
+    - "c_proj"
+
+  # Bias option: "none" | "all" | "lora_only"
+  bias: "none"
+
+  # Task type. CAUSAL_LM for language modelling.
+  task_type: "CAUSAL_LM"
+
+  # If true, merge LoRA weights into the base model before saving.
+  # Increases checkpoint size but removes inference overhead.
+  merge_weights: false
+
+  # Modules to save as full (non-LoRA) parameters (e.g., classification head).
+  modules_to_save: null

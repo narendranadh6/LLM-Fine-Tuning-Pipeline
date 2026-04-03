@@ -1,0 +1,76 @@
+# ============================================================
+# Training Configuration
+# ============================================================
+
+# --- Model ---
+model:
+  name: "gpt2"                        # HuggingFace model hub ID (use "meta-llama/Llama-2-7b-hf" for Llama)
+  revision: "main"
+  trust_remote_code: false
+  torch_dtype: "float16"              # float16 | bfloat16 | float32
+
+# --- Dataset ---
+dataset:
+  name: "wikitext"                    # HuggingFace dataset or path to local data
+  subset: "wikitext-103-raw-v1"       # dataset config / subset name
+  train_split: "train"
+  validation_split: "validation"
+  text_column: "text"
+  max_samples: null                   # null = use all; set int to limit for testing
+
+# --- Tokenizer ---
+tokenizer:
+  max_length: 512
+  padding: "max_length"
+  truncation: true
+  padding_side: "right"
+
+# --- Training ---
+training:
+  output_dir: "outputs/checkpoints"
+  num_train_epochs: 3
+  per_device_train_batch_size: 4
+  per_device_eval_batch_size: 4
+  gradient_accumulation_steps: 8      # effective batch = batch_size * gradient_accumulation
+  learning_rate: 2.0e-4
+  weight_decay: 0.01
+  warmup_ratio: 0.03
+  lr_scheduler_type: "cosine"
+  fp16: true
+  bf16: false
+  gradient_checkpointing: true
+  logging_steps: 10
+  eval_steps: 100
+  save_steps: 200
+  save_total_limit: 3
+  load_best_model_at_end: true
+  metric_for_best_model: "eval_loss"
+  greater_is_better: false
+  report_to: "none"                   # "wandb" | "mlflow" | "none"
+  seed: 42
+  dataloader_num_workers: 4
+  remove_unused_columns: false
+
+# --- Evaluation ---
+evaluation:
+  output_dir: "outputs/eval"
+  toxicity_threshold: 0.5
+  compute_bleu: false
+  compute_rouge: true
+
+# --- AWS ---
+aws:
+  s3_bucket: null                     # e.g. "my-lora-finetuning-bucket"
+  s3_prefix: "llm-lora"
+  region: "us-east-1"
+  upload_dataset: false
+  upload_model: false
+
+# --- MLflow / W&B (optional) ---
+experiment_tracking:
+  enabled: false
+  backend: "mlflow"                   # "mlflow" | "wandb"
+  experiment_name: "lora-finetuning"
+  run_name: null                      # auto-generated if null
+  mlflow_tracking_uri: "mlruns"
+  wandb_project: "lora-finetuning"
